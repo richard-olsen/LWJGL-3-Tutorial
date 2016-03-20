@@ -13,7 +13,7 @@ You'll need:
 
 ### To Set Up
 - Create new project
-- Import the 'src' and 'lib' folder into the project
+- Import the folders into the project
 - Link the libraries to your project
 - Set LWJGL's native path to the 'natives' folder found in 'lib'
 - Build And Run
