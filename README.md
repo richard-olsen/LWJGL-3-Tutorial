@@ -17,3 +17,8 @@ You'll need:
 - Link the libraries to your project
 - Set LWJGL's native path to the 'natives' folder found in 'lib'
 - Build And Run
+
+### Libraries used in the project
+- [LWJGL 3](https://www.lwjgl.org/)
+- [JOML](https://github.com/JOML-CI/JOML)
+
