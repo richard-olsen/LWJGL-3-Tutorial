@@ -1,14 +1,24 @@
+package game;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glEnable;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL;
+
+import io.Timer;
+import io.Window;
+import render.Camera;
+import render.Model;
+import render.Shader;
+import render.Texture;
 
 public class Main {
 	public Main() {
@@ -85,8 +95,7 @@ public class Main {
 				
 				target = scale;
 				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
-					//glfwSetWindowShouldClose(win.getWindow(), GL_TRUE);
-					System.out.println("TRUE");
+					glfwSetWindowShouldClose(win.getWindow(), GL_TRUE);
 				}
 				
 				win.update();

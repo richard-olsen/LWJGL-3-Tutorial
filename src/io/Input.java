@@ -1,3 +1,4 @@
+package io;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Input {
