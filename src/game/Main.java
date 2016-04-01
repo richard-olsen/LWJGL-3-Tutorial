@@ -19,6 +19,7 @@ import render.Camera;
 import render.Model;
 import render.Shader;
 import render.Texture;
+import world.TileRenderer;
 
 public class Main {
 	public Main() {
@@ -39,33 +40,35 @@ public class Main {
 		Camera camera = new Camera(win.getWidth(), win.getHeight());
 		glEnable(GL_TEXTURE_2D);
 		
-		float[] vertices = new float[] {
-				-1f, 1f, 0, //TOP LEFT     0
-				1f, 1f, 0,  //TOP RIGHT    1
-				1f, -1f, 0, //BOTTOM RIGHT 2
-				-1f, -1f, 0,//BOTTOM LEFT  3
-		};
+		TileRenderer tiles = new TileRenderer();
 		
-		float[] texture = new float[] {
-				0,0,
-				1,0,
-				1,1,
-				0,1,
-		};
-		
-		int[] indices = new int[] {
-				0,1,2,
-				2,3,0
-		};
-		
-		Model model = new Model(vertices, texture, indices);
+//		float[] vertices = new float[] {
+//				-1f, 1f, 0, //TOP LEFT     0
+//				1f, 1f, 0,  //TOP RIGHT    1
+//				1f, -1f, 0, //BOTTOM RIGHT 2
+//				-1f, -1f, 0,//BOTTOM LEFT  3
+//		};
+//		
+//		float[] texture = new float[] {
+//				0,0,
+//				1,0,
+//				1,1,
+//				0,1,
+//		};
+//		
+//		int[] indices = new int[] {
+//				0,1,2,
+//				2,3,0
+//		};
+//		
+//		Model model = new Model(vertices, texture, indices);
 		Shader shader = new Shader("shader");
 		
 		Texture tex = new Texture("./textures/test.png");
 		
 		Matrix4f scale = new Matrix4f()
-				.translate(new Vector3f(100, 0, 0))
-				.scale(64);
+				.translate(new Vector3f(0, 0, 0))
+				.scale(16);
 		
 		Matrix4f target = new Matrix4f();
 		
@@ -109,11 +112,15 @@ public class Main {
 			if(can_render) {
 				glClear(GL_COLOR_BUFFER_BIT);
 				
-				shader.bind();
-				shader.setUniform("sampler", 0);
-				shader.setUniform("projection", camera.getProjection().mul(target));
-				model.render();
-				tex.bind(0);
+//				shader.bind();
+//				shader.setUniform("sampler", 0);
+//				shader.setUniform("projection", camera.getProjection().mul(target));
+				//model.render();
+				//tex.bind(0);
+				
+				for(int i = 0; i < 8; i++) 
+					for(int j = 0; j < 4; j++)
+						tiles.renderTile((byte)0, i, j, shader, scale, camera);
 				
 				win.swapBuffers();
 				frames++;
