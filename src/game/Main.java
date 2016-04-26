@@ -1,4 +1,5 @@
 package game;
+
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -9,7 +10,6 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -17,9 +17,8 @@ import org.lwjgl.opengl.GL;
 import io.Timer;
 import io.Window;
 import render.Camera;
-import render.Model;
 import render.Shader;
-import render.Texture;
+import world.Tile;
 import world.TileRenderer;
 import world.World;
 
@@ -66,11 +65,10 @@ public class Main {
 //		Model model = new Model(vertices, texture, indices);
 		Shader shader = new Shader("shader");
 		
-		Texture tex = new Texture("./textures/test.png");
-		
 		World world = new World();
 		
-		camera.setPosition(new Vector3f(-100, 0, 0));
+		world.setTile(Tile.test2, 0, 0);
+		world.setTile(Tile.test2, 63, 63);
 		
 		double frame_cap = 1.0/60.0;
 		
@@ -111,6 +109,8 @@ public class Main {
 				if(win.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
+				
+				world.correctCamera(camera, win);
 				
 				win.update();
 				
