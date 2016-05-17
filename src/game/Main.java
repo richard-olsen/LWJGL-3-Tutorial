@@ -31,14 +31,14 @@ public class Main {
 			System.exit(1);
 		}
 		
-		Window win = new Window();
-		win.setSize(640, 480);
-		win.setFullscreen(false);
-		win.createWindow("Game");
+		Window window = new Window();
+		window.setSize(640, 480);
+		window.setFullscreen(false);
+		window.createWindow("Game");
 		
 		GL.createCapabilities();
 		
-		Camera camera = new Camera(win.getWidth(), win.getHeight());
+		Camera camera = new Camera(window.getWidth(), window.getHeight());
 		glEnable(GL_TEXTURE_2D);
 		
 		TileRenderer tiles = new TileRenderer();
@@ -78,7 +78,7 @@ public class Main {
 		double time = Timer.getTime();
 		double unprocessed = 0;
 		
-		while(!win.shouldClose()) {
+		while(!window.shouldClose()) {
 			boolean can_render = false;
 			
 			double time_2 = Timer.getTime();
@@ -92,27 +92,27 @@ public class Main {
 				unprocessed-=frame_cap;
 				can_render = true;
 				
-				if(win.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
-					glfwSetWindowShouldClose(win.getWindow(), GL_TRUE);
+				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
+					glfwSetWindowShouldClose(window.getWindow(), GL_TRUE);
 				}
 				
-				if(win.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
+				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
 					camera.getPosition().sub(new Vector3f(-5, 0, 0));
 				}
-				if(win.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
+				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
 					camera.getPosition().sub(new Vector3f(5, 0, 0));
 				}
 				
-				if(win.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
+				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
 					camera.getPosition().sub(new Vector3f(0, 5, 0));
 				}
-				if(win.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
+				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
 					camera.getPosition().sub(new Vector3f(0, -5, 0));
 				}
 				
-				world.correctCamera(camera, win);
+				world.correctCamera(camera, window);
 				
-				win.update();
+				window.update();
 				
 				if(frame_time >= 1.0) {
 					frame_time = 0;
@@ -130,9 +130,9 @@ public class Main {
 				//model.render();
 				//tex.bind(0);
 				
-				world.render(tiles, shader, camera);
+				world.render(tiles, shader, camera, window);
 				
-				win.swapBuffers();
+				window.swapBuffers();
 				frames++;
 			}
 		}
