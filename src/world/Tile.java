@@ -4,7 +4,7 @@ public class Tile {
 	public static Tile tiles[] = new Tile[16];
 	public static byte not = 0;
 	
-	public static final Tile test_tile = new Tile("test");
+	public static final Tile test_tile = new Tile("bg");
 	public static final Tile test2 = new Tile("checker");
 	
 	private byte id;

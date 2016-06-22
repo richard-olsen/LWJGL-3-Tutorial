@@ -2,8 +2,8 @@ package game;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -14,6 +14,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
+import entity.Player;
 import io.Timer;
 import io.Window;
 import render.Camera;
@@ -67,6 +68,8 @@ public class Main {
 		
 		World world = new World();
 		
+		Player player = new Player();
+		
 		world.setTile(Tile.test2, 0, 0);
 		world.setTile(Tile.test2, 63, 63);
 		
@@ -96,19 +99,7 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), GL_TRUE);
 				}
 				
-				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) {
-					camera.getPosition().sub(new Vector3f(-5, 0, 0));
-				}
-				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) {
-					camera.getPosition().sub(new Vector3f(5, 0, 0));
-				}
-				
-				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) {
-					camera.getPosition().sub(new Vector3f(0, 5, 0));
-				}
-				if(window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) {
-					camera.getPosition().sub(new Vector3f(0, -5, 0));
-				}
+				player.update((float)frame_cap, window, camera, world);
 				
 				world.correctCamera(camera, window);
 				
@@ -131,6 +122,8 @@ public class Main {
 				//tex.bind(0);
 				
 				world.render(tiles, shader, camera, window);
+				
+				player.render(shader, camera);
 				
 				window.swapBuffers();
 				frames++;
