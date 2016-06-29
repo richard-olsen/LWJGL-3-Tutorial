@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 
 import io.Window;
+import render.Animation;
 import render.Camera;
 import render.Model;
 import render.Shader;
@@ -12,7 +13,8 @@ import world.World;
 
 public class Player {
 	private Model model;
-	private Texture texture;
+	//private Texture texture;
+	private Animation texture;
 	private Transform transform;
 	
 	public Player() {
@@ -36,7 +38,7 @@ public class Player {
 		};
 		
 		model = new Model(vertices, texture, indices);
-		this.texture = new Texture("test.png");
+		this.texture = new Animation(5, 65, "an");
 		
 		transform = new Transform();
 		transform.scale = new Vector3f(16,16,1);
