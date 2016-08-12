@@ -10,10 +10,10 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
+import collision.AABB;
 import entity.Player;
 import io.Timer;
 import io.Window;
@@ -26,6 +26,7 @@ import world.World;
 public class Main {
 	public Main() {
 		Window.setCallbacks();
+		
 		
 		if(glfwInit() != 1) {
 			System.err.println("GLFW Failed to initialize!");
@@ -70,8 +71,11 @@ public class Main {
 		
 		Player player = new Player();
 		
-		world.setTile(Tile.test2, 0, 0);
-		world.setTile(Tile.test2, 63, 63);
+		world.setTile(Tile.test2, 5, 0);
+		world.setTile(Tile.test2, 6, 0);
+		world.setTile(Tile.test2, 7, 0);
+		world.setTile(Tile.test2, 7, 1);
+		world.setTile(Tile.test2, 7, 2);
 		
 		double frame_cap = 1.0/60.0;
 		
