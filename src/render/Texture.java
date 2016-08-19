@@ -1,6 +1,19 @@
 package render;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
+
+import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_RGBA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glDeleteTextures;
+import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL11.glTexImage2D;
+import static org.lwjgl.opengl.GL11.glTexParameterf;
+
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,19 +25,19 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
 public class Texture {
-	private int id;
+	private int textureObject;
 	private int width;
 	private int height;
 	
 	public Texture(String filename) {
-		BufferedImage bi;
+		BufferedImage bufferedImage;
 		try {
-			bi = ImageIO.read(new File("./textures/"+filename));
-			width = bi.getWidth();
-			height = bi.getHeight();
+			bufferedImage = ImageIO.read(new File("./textures/"+filename));
+			width = bufferedImage.getWidth();
+			height = bufferedImage.getHeight();
 			
 			int[] pixels_raw = new int[width * height * 4];
-			pixels_raw = bi.getRGB(0, 0, width, height, null, 0, width);
+			pixels_raw = bufferedImage.getRGB(0, 0, width, height, null, 0, width);
 			
 			ByteBuffer pixels = BufferUtils.createByteBuffer(width * height * 4);
 			
@@ -40,9 +53,9 @@ public class Texture {
 			
 			pixels.flip();
 			
-			id = glGenTextures();
+			textureObject = glGenTextures();
 			
-			glBindTexture(GL_TEXTURE_2D, id);
+			glBindTexture(GL_TEXTURE_2D, textureObject);
 			
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -55,14 +68,14 @@ public class Texture {
 	}
 	
 	protected void finalize() throws Throwable {
-		glDeleteTextures(id);
+		glDeleteTextures(textureObject);
 		super.finalize();
 	}
 	
 	public void bind(int sampler) {
 		if(sampler >= 0 && sampler <= 31) {
 			glActiveTexture(GL_TEXTURE0 + sampler);
-			glBindTexture(GL_TEXTURE_2D, id);
+			glBindTexture(GL_TEXTURE_2D, textureObject);
 		}
 	}
 }

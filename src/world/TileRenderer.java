@@ -11,11 +11,11 @@ import render.Shader;
 import render.Texture;
 
 public class TileRenderer {
-	private HashMap<String, Texture> tile_textures;
-	private Model model;
+	private HashMap<String, Texture> tileTextures;
+	private Model tileModel;
 	
 	public TileRenderer() {
-		tile_textures = new HashMap<String, Texture>();
+		tileTextures = new HashMap<String, Texture>();
 		float[] vertices = new float[] {
 				-1f, 1f, 0, //TOP LEFT     0
 				1f, 1f, 0,  //TOP RIGHT    1
@@ -35,13 +35,13 @@ public class TileRenderer {
 				2,3,0
 		};
 		
-		model = new Model(vertices, texture, indices);
+		tileModel = new Model(vertices, texture, indices);
 		
 		for(int i = 0; i < Tile.tiles.length; i++) {
 			if(Tile.tiles[i] != null) {
-    			if(!tile_textures.containsKey(Tile.tiles[i].getTexture())) {
+    			if(!tileTextures.containsKey(Tile.tiles[i].getTexture())) {
     				String tex = Tile.tiles[i].getTexture();
-    				tile_textures.put ( tex, new Texture(tex+".png") );
+    				tileTextures.put ( tex, new Texture(tex+".png") );
     			}
 			}
 		}
@@ -49,8 +49,8 @@ public class TileRenderer {
 	
 	public void renderTile(Tile tile, int x, int y, Shader shader, Matrix4f world, Camera cam) {
 		shader.bind();
-		if(tile_textures.containsKey(tile.getTexture()))
-			tile_textures.get(tile.getTexture()).bind(0);
+		if(tileTextures.containsKey(tile.getTexture()))
+			tileTextures.get(tile.getTexture()).bind(0);
 		
 		Matrix4f tile_pos = new Matrix4f().translate(new Vector3f(x*2, y*2, 0));
 		Matrix4f target = new Matrix4f();
@@ -61,6 +61,6 @@ public class TileRenderer {
 		shader.setUniform("sampler", 0);
 		shader.setUniform("projection", target);
 		
-		model.render();
+		tileModel.render();
 	}
 }

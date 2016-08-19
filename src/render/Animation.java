@@ -4,7 +4,7 @@ import io.Timer;
 
 public class Animation {
 	private Texture[] frames;
-	private int pointer;
+	private int texturePointer;
 	
 	private double elapsedTime;
 	private double currentTime;
@@ -12,7 +12,7 @@ public class Animation {
 	private double fps;
 	
 	public Animation(int amount, int fps, String filename) {
-		this.pointer = 0;
+		this.texturePointer = 0;
 		this.elapsedTime = 0;
 		this.currentTime = 0;
 		this.lastTime = Timer.getTime();
@@ -32,13 +32,13 @@ public class Animation {
 		
 		if(elapsedTime >= fps) {
 			elapsedTime -= fps;
-			pointer++;
+			texturePointer++;
 		}
 		
-		if(pointer >= frames.length) pointer = 0;
+		if(texturePointer >= frames.length) texturePointer = 0;
 		
 		this.lastTime = currentTime;
 		
-		frames[pointer].bind(sampler);
+		frames[texturePointer].bind(sampler);
 	}
 }

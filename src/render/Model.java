@@ -1,7 +1,21 @@
 package render;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
+
+import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
+
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glDeleteBuffers;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -9,25 +23,26 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 
 public class Model {
-	private int draw_count;
-	private int v_id;
-	private int t_id;
+	private int drawCount;
 	
-	private int i_id;
+	private int vertexObject;
+	private int textureCoordObject;
+	
+	private int indexObject;
 	
 	public Model(float[] vertices, float[] tex_coords, int[] indices) {
-		draw_count = indices.length;
+		drawCount = indices.length;
 		
-		v_id = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, v_id);
+		vertexObject = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
 		glBufferData(GL_ARRAY_BUFFER, createBuffer(vertices), GL_STATIC_DRAW);
 		
-		t_id = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, t_id);
+		textureCoordObject = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, textureCoordObject);
 		glBufferData(GL_ARRAY_BUFFER, createBuffer(tex_coords), GL_STATIC_DRAW);
 		
-		i_id = glGenBuffers();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i_id);
+		indexObject = glGenBuffers();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexObject);
 		
 		IntBuffer buffer = BufferUtils.createIntBuffer(indices.length);
 		buffer.put(indices);
@@ -40,9 +55,9 @@ public class Model {
 	}
 
 	protected void finalize() throws Throwable {
-		glDeleteBuffers(v_id);
-		glDeleteBuffers(t_id);
-		glDeleteBuffers(i_id);
+		glDeleteBuffers(vertexObject);
+		glDeleteBuffers(textureCoordObject);
+		glDeleteBuffers(indexObject);
 		super.finalize();
 	}
 	
@@ -50,14 +65,14 @@ public class Model {
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 
-		glBindBuffer(GL_ARRAY_BUFFER, v_id);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
 		
-		glBindBuffer(GL_ARRAY_BUFFER, t_id);
+		glBindBuffer(GL_ARRAY_BUFFER, textureCoordObject);
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 0, 0);
 		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, i_id);
-		glDrawElements(GL_TRIANGLES, draw_count, GL_UNSIGNED_INT, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexObject);
+		glDrawElements(GL_TRIANGLES, drawCount, GL_UNSIGNED_INT, 0);
 		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
