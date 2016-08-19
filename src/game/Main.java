@@ -67,15 +67,9 @@ public class Main {
 //		Model model = new Model(vertices, texture, indices);
 		Shader shader = new Shader("shader");
 		
-		World world = new World();
+		World world = new World("test_level");
 		
 		Player player = new Player();
-		
-		world.setTile(Tile.test2, 5, 0);
-		world.setTile(Tile.test2, 6, 0);
-		world.setTile(Tile.test2, 7, 0);
-		world.setTile(Tile.test2, 7, 1);
-		world.setTile(Tile.test2, 7, 2);
 		
 		double frame_cap = 1.0/60.0;
 		
