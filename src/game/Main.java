@@ -14,7 +14,9 @@ import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
 import collision.AABB;
+import entity.Entity;
 import entity.Player;
+import entity.Transform;
 import io.Timer;
 import io.Window;
 import render.Camera;
@@ -44,6 +46,7 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 		
 		TileRenderer tiles = new TileRenderer();
+		Entity.initAsset();
 		
 //		float[] vertices = new float[] {
 //				-1f, 1f, 0, //TOP LEFT     0
@@ -67,9 +70,10 @@ public class Main {
 //		Model model = new Model(vertices, texture, indices);
 		Shader shader = new Shader("shader");
 		
+		
 		World world = new World("test_level");
 		
-		Player player = new Player();
+		Player player = new Player(new Transform());
 		
 		double frame_cap = 1.0/60.0;
 		
@@ -121,12 +125,14 @@ public class Main {
 				
 				world.render(tiles, shader, camera, window);
 				
-				player.render(shader, camera);
+				player.render(shader, camera, world);
 				
 				window.swapBuffers();
 				frames++;
 			}
 		}
+		
+		Entity.deleteAsset();
 		
 		glfwTerminate();
 	}
