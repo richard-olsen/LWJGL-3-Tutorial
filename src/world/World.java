@@ -3,6 +3,8 @@ package world;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -11,7 +13,11 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import collision.AABB;
+import entity.Entity;
+import entity.Player;
+import entity.Transform;
 import io.Window;
+import render.Animation;
 import render.Camera;
 import render.Shader;
 
@@ -19,6 +25,7 @@ public class World {
 	private final int view = 24;
 	private byte[] tiles;
 	private AABB[] bounding_boxes;
+	private List<Entity> entities;
 	private int width;
 	private int height;
 	private int scale;
@@ -41,6 +48,7 @@ public class World {
 			
 			tiles = new byte[width * height];
 			bounding_boxes = new AABB[width * height];
+			entities = new ArrayList<Entity>();
 			
 			for(int y = 0; y < height; y++) {
 				for(int x = 0; x < width; x++) {
@@ -57,6 +65,20 @@ public class World {
 						setTile(t, x, y);
 				}
 			}
+			
+			//TODO Finish level loader
+			entities.add(new Player(new Transform()));
+			
+			Transform t = new Transform();
+			t.pos.x = 0;
+			t.pos.y = -4;
+			
+			entities.add(new Entity(new Animation(1, 1, "an"), t) {
+				@Override
+				public void update(float delta, Window window, Camera camera, World world) {
+					move(new Vector2f(5*delta,0));
+				}
+			});
 			
 			
 		} catch (IOException e) {
@@ -90,6 +112,20 @@ public class World {
 			}
 		}
 		
+		
+		for(Entity entity : entities) {
+			entity.render(shader, cam, this);
+		}
+	}
+	
+	public void update(float delta, Window window, Camera camera) {
+		for(Entity entity : entities) {
+			entity.update(delta, window, camera, this);
+		}
+		
+		for(int i = 0; i < entities.size(); i++) {
+			entities.get(i).collideWithTiles(this);
+		}
 	}
 	
 	public void correctCamera(Camera camera, Window window) {

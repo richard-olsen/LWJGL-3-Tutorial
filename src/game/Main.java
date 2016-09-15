@@ -73,8 +73,6 @@ public class Main {
 		
 		World world = new World("test_level");
 		
-		Player player = new Player(new Transform());
-		
 		double frame_cap = 1.0/60.0;
 		
 		double frame_time = 0;
@@ -101,7 +99,7 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), GL_TRUE);
 				}
 				
-				player.update((float)frame_cap, window, camera, world);
+				world.update((float)frame_cap, window, camera);
 				
 				world.correctCamera(camera, window);
 				
@@ -124,8 +122,6 @@ public class Main {
 				//tex.bind(0);
 				
 				world.render(tiles, shader, camera, window);
-				
-				player.render(shader, camera, world);
 				
 				window.swapBuffers();
 				frames++;

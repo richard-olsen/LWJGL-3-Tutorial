@@ -3,7 +3,6 @@ package entity;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
 import collision.AABB;
 import collision.Collision;
@@ -14,12 +13,12 @@ import render.Model;
 import render.Shader;
 import world.World;
 
-public class Entity {
+public abstract class Entity {
 	private static Model model;
-	private AABB bounding_box;
+	protected AABB bounding_box;
 	//private Texture texture;
-	private Animation texture;
-	private Transform transform;
+	protected Animation texture;
+	protected Transform transform;
 	
 	public Entity(Animation animation, Transform transform) {
 		this.texture = animation;
@@ -35,7 +34,7 @@ public class Entity {
 		bounding_box.getCenter().set(transform.pos.x, transform.pos.y);
 	}
 	
-	public void update(float delta, Window window, Camera camera, World world) {
+	public void collideWithTiles(World world) {
 		AABB[] boxes = new AABB[25];
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 5; j++) {
@@ -85,10 +84,9 @@ public class Entity {
 				transform.pos.set(bounding_box.getCenter(), 0);
 			}
 		}
-		
-		camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.05f);
-		//camera.setPosition(transform.pos.mul(-world.getScale(), new Vector3f()));
 	}
+	
+	public abstract void update(float delta, Window window, Camera camera, World world);
 	
 	public void render(Shader shader, Camera camera, World world) {
 		Matrix4f target = camera.getProjection();
