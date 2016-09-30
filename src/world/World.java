@@ -125,6 +125,10 @@ public class World {
 		
 		for(int i = 0; i < entities.size(); i++) {
 			entities.get(i).collideWithTiles(this);
+			for(int j = i+1; j < entities.size(); j++) {
+				entities.get(i).collideWithEntity(entities.get(j));
+			}
+			entities.get(i).collideWithTiles(this);
 		}
 	}
 	

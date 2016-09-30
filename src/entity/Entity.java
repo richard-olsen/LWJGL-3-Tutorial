@@ -125,4 +125,19 @@ public abstract class Entity {
 	public static void deleteAsset() {
 		model = null;
 	}
+
+	public void collideWithEntity(Entity entity) {
+		Collision collision = bounding_box.getCollision(entity.bounding_box);
+		
+		if(collision.isIntersecting) {
+			collision.distance.x /= 2;
+			collision.distance.y /= 2;
+			
+			bounding_box.correctPosition(entity.bounding_box, collision);
+			transform.pos.set(bounding_box.getCenter().x, bounding_box.getCenter().y, 0);
+			
+			entity.bounding_box.correctPosition(bounding_box, collision);
+			entity.transform.pos.set(entity.bounding_box.getCenter().x, entity.bounding_box.getCenter().y, 0);
+		}
+	}
 }
