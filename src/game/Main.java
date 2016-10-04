@@ -6,22 +6,16 @@ import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import org.joml.Vector2f;
 import org.lwjgl.opengl.GL;
 
-import collision.AABB;
 import entity.Entity;
-import entity.Player;
-import entity.Transform;
 import io.Timer;
 import io.Window;
 import render.Camera;
 import render.Shader;
-import world.Tile;
 import world.TileRenderer;
 import world.World;
 
@@ -30,7 +24,7 @@ public class Main {
 		Window.setCallbacks();
 		
 		
-		if(glfwInit() != 1) {
+		if(!glfwInit()) {
 			System.err.println("GLFW Failed to initialize!");
 			System.exit(1);
 		}
@@ -96,7 +90,7 @@ public class Main {
 				can_render = true;
 				
 				if(window.getInput().isKeyReleased(GLFW_KEY_ESCAPE)) {
-					glfwSetWindowShouldClose(window.getWindow(), GL_TRUE);
+					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 				
 				world.update((float)frame_cap, window, camera);

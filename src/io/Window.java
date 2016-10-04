@@ -3,6 +3,7 @@ package io;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWErrorCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 
 public class Window {
@@ -14,7 +15,7 @@ public class Window {
 	private Input input;
 	
 	public static void setCallbacks() {
-		glfwSetErrorCallback(new GLFWErrorCallback() {
+		glfwSetErrorCallback(new GLFWErrorCallbackI() {
 			@Override
 			public void invoke(int error, long description) {
 				throw new IllegalStateException(GLFWErrorCallback.getDescription(description));
@@ -53,7 +54,7 @@ public class Window {
 	}
 	
 	public boolean shouldClose() {
-		return glfwWindowShouldClose(window) != 0;
+		return glfwWindowShouldClose(window);
 	}
 	
 	public void swapBuffers() {
