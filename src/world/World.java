@@ -32,10 +32,10 @@ public class World {
 	
 	private Matrix4f world;
 	
-	public World(String world) {
+	public World(String world, Camera camera) {
 		try {
-			BufferedImage tile_sheet = ImageIO.read(new File("./levels/" + world + "_tiles.png"));
-			//BufferedImage entity_sheet = ImageIO.read(new File("./levels/" + world + "_entity.png"));
+			BufferedImage tile_sheet = ImageIO.read(new File("./levels/" + world + "/tiles.png"));
+			BufferedImage entity_sheet = ImageIO.read(new File("./levels/" + world + "/entities.png"));
 			
 			width = tile_sheet.getWidth();
 			height = tile_sheet.getHeight();
@@ -45,14 +45,19 @@ public class World {
 			this.world.scale(scale);
 			
 			int[] colorTileSheet = tile_sheet.getRGB(0, 0, width, height, null, 0, width);
+			int[] colorEntitySheet = entity_sheet.getRGB(0, 0, width, height, null, 0, width);
 			
 			tiles = new byte[width * height];
 			bounding_boxes = new AABB[width * height];
 			entities = new ArrayList<Entity>();
 			
+			Transform transform;
+			
 			for(int y = 0; y < height; y++) {
 				for(int x = 0; x < width; x++) {
 					int red = (colorTileSheet[x + y * width] >> 16) & 0xFF;
+					int entity_index = (colorEntitySheet[x + y * width] >> 16) & 0xFF;
+					int entity_alpha = (colorEntitySheet[x + y * width] >> 24) & 0xFF;
 					
 					Tile t;
 					try {
@@ -63,11 +68,24 @@ public class World {
 					
 					if (t != null)
 						setTile(t, x, y);
+					
+					if(entity_alpha > 0) {
+						transform = new Transform();
+						transform.pos.x = x*2;
+						transform.pos.y = -y*2;
+						switch(entity_index) {
+						case 1:							//Player
+							Player player = new Player(transform);
+							entities.add(player);
+							camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
+							break;
+						default:
+							
+							break;
+						}
+					}
 				}
 			}
-			
-			//TODO Finish level loader
-			entities.add(new Player(new Transform()));
 			
 		} catch (IOException e) {
 			e.printStackTrace();

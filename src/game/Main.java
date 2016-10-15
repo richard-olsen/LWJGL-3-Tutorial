@@ -65,7 +65,7 @@ public class Main {
 		Shader shader = new Shader("shader");
 		
 		
-		World world = new World("test_level");
+		World world = new World("test_level", camera);
 		
 		double frame_cap = 1.0/60.0;
 		
