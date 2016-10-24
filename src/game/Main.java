@@ -66,6 +66,7 @@ public class Main {
 		
 		
 		World world = new World("test_level", camera);
+		world.calculateView(window);
 		
 		double frame_cap = 1.0/60.0;
 		
@@ -86,6 +87,12 @@ public class Main {
 			time = time_2;
 			
 			while(unprocessed >= frame_cap) {
+				if(window.hasResized()) {
+					camera.setProjection(window.getWidth(), window.getHeight());
+					world.calculateView(window);
+					glViewport(0, 0, window.getWidth(), window.getHeight());
+				}
+				
 				unprocessed-=frame_cap;
 				can_render = true;
 				
@@ -115,7 +122,7 @@ public class Main {
 				//model.render();
 				//tex.bind(0);
 				
-				world.render(tiles, shader, camera, window);
+				world.render(tiles, shader, camera);
 				
 				window.swapBuffers();
 				frames++;
