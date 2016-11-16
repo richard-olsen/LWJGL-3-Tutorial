@@ -8,7 +8,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL;
 
+import assets.Assets;
 import entity.Entity;
+import gui.Gui;
 import io.Timer;
 import io.Window;
 import render.Camera;
@@ -40,7 +42,7 @@ public class Main {
 		glEnable(GL_TEXTURE_2D);
 		
 		TileRenderer tiles = new TileRenderer();
-		Entity.initAsset();
+		Assets.initAsset();
 		
 //		float[] vertices = new float[] {
 //				-1f, 1f, 0, //TOP LEFT     0
@@ -67,6 +69,8 @@ public class Main {
 		
 		World world = new World("test_level", camera);
 		world.calculateView(window);
+		
+		Gui gui = new Gui();
 		
 		double frame_cap = 1.0/60.0;
 		
@@ -124,12 +128,14 @@ public class Main {
 				
 				world.render(tiles, shader, camera);
 				
+				gui.render(camera);
+				
 				window.swapBuffers();
 				frames++;
 			}
 		}
 		
-		Entity.deleteAsset();
+		Assets.deleteAsset();
 		
 		glfwTerminate();
 	}

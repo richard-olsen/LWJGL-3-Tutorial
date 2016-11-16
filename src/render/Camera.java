@@ -26,6 +26,10 @@ public class Camera {
 	
 	public Vector3f getPosition() { return position; }
 	
+	public Matrix4f getUntransformedProjection() {
+		return projection;
+	}
+	
 	public Matrix4f getProjection() {
 		return projection.translate(position, new Matrix4f());
 	}
