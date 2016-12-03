@@ -70,7 +70,7 @@ public class Main {
 		World world = new World("test_level", camera);
 		world.calculateView(window);
 		
-		Gui gui = new Gui();
+		Gui gui = new Gui(window);
 		
 		double frame_cap = 1.0/60.0;
 		
@@ -93,6 +93,7 @@ public class Main {
 			while(unprocessed >= frame_cap) {
 				if(window.hasResized()) {
 					camera.setProjection(window.getWidth(), window.getHeight());
+					gui.resizeCamera(window);
 					world.calculateView(window);
 					glViewport(0, 0, window.getWidth(), window.getHeight());
 				}
@@ -128,7 +129,7 @@ public class Main {
 				
 				world.render(tiles, shader, camera);
 				
-				gui.render(camera);
+				gui.render();
 				
 				window.swapBuffers();
 				frames++;
