@@ -105,6 +105,8 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 				
+				gui.update(window.getInput());
+				
 				world.update((float)frame_cap, window, camera);
 				
 				world.correctCamera(camera, window);
