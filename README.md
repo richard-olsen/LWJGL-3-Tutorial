@@ -4,21 +4,27 @@ This project follows along my tutorial series for LWJGL 3,
 which can be found on [YouTube](https://www.youtube.com/channel/UCVebYXGDlnFPTIB4CT2dcGA)  
 
 
-### Required Items
+## Required Items
 You'll need:  
 - Java
 - JDK
 - An IDE you're comfortable with
 
 
-### To Set Up
-- Create new project
-- Import the folders into the project
-- Link the libraries to your project
-- Set LWJGL's native path to the 'natives' folder found in 'lib'
+## To Set Up
+### If you have gradle installed
+- open command shell (eg. cmd, PowerShell, bash)
+- to build environment for your IDE write `gradle eclipse` or `gradle idea`. For other IDE see gradle docs for it.
+- import created project to your IDE
 - Build And Run
+- you can also build by gradle command `gradle build` and to run `gradle run`
 
-### Libraries used in the project
+### if you doesn't have gradle (using wrapper)
+- do same as above but instead of command gradle run gradlew.bat or just gradlew
+
+#### Project settings are available in `build.gradle` file
+
+## Libraries used in the project
 - [LWJGL 3](https://www.lwjgl.org/)
 - [JOML](https://github.com/JOML-CI/JOML)
 
