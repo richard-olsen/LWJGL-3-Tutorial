@@ -1,0 +1,42 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
+mainClassName = 'com.github.elegantwhelp.game.Main'
+group = 'com.github.elegantwhelp'
+version = '1.0.0-SNAPSHOT'
+
+description = "LWJGL-3-Tutorial"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
+}
+
+repositories {
+        
+     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+dependencies {
+    compile group: 'org.joml', name: 'joml-camera', version:'1.2.0-SNAPSHOT'
+    compile group: 'org.lwjgl', name: 'lwjgl', version:'3.1.2-SNAPSHOT'
+    compile group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.1.2-SNAPSHOT'
+    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.1.2-SNAPSHOT'
+    compile group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.1.2-SNAPSHOT'
+    compile group: 'org.lwjgl', name: 'lwjgl', version:'3.1.2-SNAPSHOT', classifier:'natives-windows'
+    compile group: 'org.lwjgl', name: 'lwjgl-opengl', version:'3.1.2-SNAPSHOT', classifier:'natives-windows'
+    compile group: 'org.lwjgl', name: 'lwjgl-glfw', version:'3.1.2-SNAPSHOT', classifier:'natives-windows'
+    compile group: 'org.lwjgl', name: 'lwjgl-stb', version:'3.1.2-SNAPSHOT', classifier:'natives-windows'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/main/resources"]
+        }
+    }
+}
