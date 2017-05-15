@@ -28,3 +28,6 @@ You'll need:
 - [LWJGL 3](https://www.lwjgl.org/)
 - [JOML](https://github.com/JOML-CI/JOML)
 
+
+## Special Thanks To:
+- [Lucas Levvy](https://github.com/Levvy055) Setting up the project for Gradle
