@@ -11,6 +11,7 @@ import com.github.elegantwhelp.io.Timer;
 import com.github.elegantwhelp.io.Window;
 import com.github.elegantwhelp.render.Camera;
 import com.github.elegantwhelp.render.Shader;
+import com.github.elegantwhelp.render.VertexBatcher;
 import com.github.elegantwhelp.world.TileRenderer;
 import com.github.elegantwhelp.world.World;
 
@@ -60,13 +61,17 @@ public class Main {
 		//
 		// Model model = new Model(vertices, texture, indices);
 		Shader shader = new Shader("shader");
+		Shader batcherShader = new Shader("batcher");
+		VertexBatcher batcher = new VertexBatcher();
+		batcher.init();
 		
 		World world = new World("test_level", camera);
 		world.calculateView(window);
 		
 		Gui gui = new Gui(window);
 		
-		double frame_cap = 1.0 / 60.0;
+		glfwSwapInterval(0);
+		double frame_cap = 1.0 / 1000.0;
 		
 		double frame_time = 0;
 		int frames = 0;
@@ -124,15 +129,28 @@ public class Main {
 				// model.render();
 				// tex.bind(0);
 				
-				world.render(tiles, shader, camera);
+				//world.render(tiles, shader, camera);
 				
-				gui.render();
+				//gui.render();
+				
+				batcherShader.bind();
+				batcherShader.setUniform("cam_projection", camera.getUntransformedProjection());
+				batcher.addQuad(-32, -32, 32, 32);
+				batcher.addQuad(-100, -100, -50, -50);
+				batcher.draw();
 				
 				window.swapBuffers();
 				frames++;
 			}
+			
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
+		batcher.destroy();
 		Assets.deleteAsset();
 		
 		glfwTerminate();
