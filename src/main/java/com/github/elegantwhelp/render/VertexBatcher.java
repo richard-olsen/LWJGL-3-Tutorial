@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL20.*;
 public class VertexBatcher {
 	private FloatBuffer vertices;
 	
-	public static final int MAX_VERTICES = 100;
+	public static final int MAX_VERTICES = 600000; // About 100000 sprites per batch
 	public static final int VERTEX_SIZE = 4;
 	
 	private int vbo;

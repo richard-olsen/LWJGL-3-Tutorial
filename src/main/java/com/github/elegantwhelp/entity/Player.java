@@ -23,13 +23,13 @@ public class Player extends Entity {
 	@Override
 	public void update(float delta, Window window, Camera camera, World world) {
 		Vector2f movement = new Vector2f();
-		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) movement.add(-10 * delta, 0);
+		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_A)) movement.add(-10f * delta, 0);
 		
-		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) movement.add(10 * delta, 0);
+		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_D)) movement.add(10f * delta, 0);
 		
-		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) movement.add(0, 10 * delta);
+		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_W)) movement.add(0, -10f * delta);
 		
-		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) movement.add(0, -10 * delta);
+		if (window.getInput().isKeyDown(GLFW.GLFW_KEY_S)) movement.add(0, 10f * delta);
 		
 		move(movement);
 		
@@ -37,6 +37,7 @@ public class Player extends Entity {
 			useAnimation(ANIM_WALK);
 		else useAnimation(ANIM_IDLE);
 		
-		camera.getPosition().lerp(transform.pos.mul(-world.getScale(), new Vector3f()), 0.05f);
+		camera.getPosition().lerp(new Vector3f((transform.pos.add(bounding_box.getHalfExtent(), new Vector2f())).mul(world.getScale()), 0), 5 * delta);
+		//camera.getPosition().set(new Vector3f((transform.pos.add(bounding_box.getHalfExtent(), new Vector2f())).mul(world.getScale()), 0));
 	}
 }

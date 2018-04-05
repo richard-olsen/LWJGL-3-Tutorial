@@ -16,11 +16,15 @@ public class Shader {
 	private int vertexShaderObject;
 	private int fragmentShaderObject;
 	
-	public Shader(String filename) {
+	public Shader() {
+		
+	}
+	
+	public void create(String shaderName) {
 		programObject = glCreateProgram();
 		
 		vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
-		glShaderSource(vertexShaderObject, readFile(filename + ".vs"));
+		glShaderSource(vertexShaderObject, readFile(shaderName + ".vs"));
 		glCompileShader(vertexShaderObject);
 		if (glGetShaderi(vertexShaderObject, GL_COMPILE_STATUS) != 1) {
 			System.err.println(glGetShaderInfoLog(vertexShaderObject));
@@ -28,7 +32,7 @@ public class Shader {
 		}
 		
 		fragmentShaderObject = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(fragmentShaderObject, readFile(filename + ".fs"));
+		glShaderSource(fragmentShaderObject, readFile(shaderName + ".fs"));
 		glCompileShader(fragmentShaderObject);
 		if (glGetShaderi(fragmentShaderObject, GL_COMPILE_STATUS) != 1) {
 			System.err.println(glGetShaderInfoLog(fragmentShaderObject));
@@ -53,14 +57,12 @@ public class Shader {
 		}
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
+	public void destroy() { 
 		glDetachShader(programObject, vertexShaderObject);
 		glDetachShader(programObject, fragmentShaderObject);
 		glDeleteShader(vertexShaderObject);
 		glDeleteShader(fragmentShaderObject);
 		glDeleteProgram(programObject);
-		super.finalize();
 	}
 	
 	public void setUniform(String uniformName, int value) {

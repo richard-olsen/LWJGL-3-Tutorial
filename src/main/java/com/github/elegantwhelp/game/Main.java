@@ -38,8 +38,8 @@ public class Main {
 		Camera camera = new Camera(window.getWidth(), window.getHeight());
 		glEnable(GL_TEXTURE_2D);
 		
-		TileRenderer tiles = new TileRenderer();
-		Assets.initAsset();
+		//TileRenderer tiles = new TileRenderer();
+		//Assets.initAsset();
 		
 		// float[] vertices = new float[] {
 		// -1f, 1f, 0, //TOP LEFT 0
@@ -61,16 +61,16 @@ public class Main {
 		// };
 		//
 		// Model model = new Model(vertices, texture, indices);
-		Shader shader = new Shader("shader");
-		Shader batcherShader = new Shader("batcher");
+		Shader batcherShader = new Shader();
+		batcherShader.create("batcher");
 		VertexBatcher batcher = new VertexBatcher();
 		batcher.init();
-		Sprite sprite = new Sprite(batcher, "tiles.png", 4, 4);
+		Sprite tiles = new Sprite(batcher, "tiles_with_borders.png", 4, 4);
 		
-		//World world = new World("test_level", camera);
+		World world = new World("test_level", camera);
 		//world.calculateView(window);
 		
-		Gui gui = new Gui(window);
+		//Gui gui = new Gui(window);
 		
 		glfwSwapInterval(0);
 		double frame_cap = 1.0 / 1000.0;
@@ -80,9 +80,6 @@ public class Main {
 		
 		double time = Timer.getTime();
 		double unprocessed = 0;
-		
-		float halfWinWidth = window.getWidth() * 0.5f;
-		float halfWinHeight = window.getHeight() * 0.5f;
 		
 		while (!window.shouldClose()) {
 			boolean can_render = false;
@@ -94,20 +91,16 @@ public class Main {
 			
 			time = time_2;
 			
-			if (window.hasResized()) {
-				int winWidth = window.getWidth();
-				int winHeight = window.getHeight();
-				camera.setProjection(winWidth, winHeight);
-				
-				halfWinWidth = winWidth * 0.5f;
-				halfWinHeight = winHeight * 0.5f;
-				
-				gui.resizeCamera(window);
-				//world.calculateView(window);
-				glViewport(0, 0, winWidth, winHeight);
-			}
-			
 			while (unprocessed >= frame_cap) {
+				if (window.hasResized()) {
+					int winWidth = window.getWidth();
+					int winHeight = window.getHeight();
+					camera.setProjection(winWidth, winHeight);
+					
+					//gui.resizeCamera(window);
+					//world.calculateView(window);
+					glViewport(0, 0, winWidth, winHeight);
+				}
 				
 				unprocessed -= frame_cap;
 				can_render = true;
@@ -116,9 +109,9 @@ public class Main {
 					glfwSetWindowShouldClose(window.getWindow(), true);
 				}
 				
-				gui.update(window.getInput());
+				//gui.update(window.getInput());
 				
-				//world.update((float) frame_cap, window, camera);
+				world.update((float) frame_cap, window, camera);
 				
 				//world.correctCamera(camera, window);
 				
@@ -146,11 +139,13 @@ public class Main {
 				//gui.render();
 				
 				batcherShader.bind();
-				batcherShader.setUniform("cam_projection", camera.getUntransformedProjection());
+				batcherShader.setUniform("cam_projection", camera.getTransformedProjection());
 				batcherShader.setUniform("atlas", 0);
 				
-				sprite.bindTexture();
-				sprite.drawSprite(-halfWinWidth,-halfWinHeight,halfWinWidth,halfWinHeight,0);
+				tiles.bindTexture();
+				
+				world.renderTiles(tiles, camera);
+				world.renderEntities(tiles, camera);
 				
 				batcher.draw();
 				
@@ -164,9 +159,9 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		
+		batcherShader.destroy();
 		batcher.destroy();
-		Assets.deleteAsset();
+		//Assets.deleteAsset();
 		
 		glfwTerminate();
 	}

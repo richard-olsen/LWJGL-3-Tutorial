@@ -15,6 +15,7 @@ import com.github.elegantwhelp.entity.*;
 import com.github.elegantwhelp.io.Window;
 import com.github.elegantwhelp.render.Camera;
 import com.github.elegantwhelp.render.Shader;
+import com.github.elegantwhelp.render.Sprite;
 
 public class World {
 	private int viewX;
@@ -67,13 +68,16 @@ public class World {
 					
 					if (entity_alpha > 0) {
 						transform = new Transform();
-						transform.pos.x = x * 2;
-						transform.pos.y = -y * 2;
+						transform.pos.x = x;
+						transform.pos.y = y;
+						transform.scale.x = 1;
+						transform.scale.y = 1; // Scale is based off the size of tiles. 2 would be the size of 2 tiles, 1/2 would be the size of half a tile etc.
+						// Recommended to use squares as rectangles cause a bug in the sorting code.
 						switch (entity_index) {
 							case 1 :							// Player
 								Player player = new Player(transform);
 								entities.add(player);
-								camera.getPosition().set(transform.pos.mul(-scale, new Vector3f()));
+								camera.getPosition().set(transform.pos.x, transform.pos.y, 0);
 								break;
 							default :
 								break;
@@ -91,7 +95,7 @@ public class World {
 	public World() {
 		width = 64;
 		height = 64;
-		scale = 16;
+		scale = 32;
 		
 		tiles = new byte[width * height];
 		bounding_boxes = new AABB[width * height];
@@ -101,27 +105,49 @@ public class World {
 	}
 	
 	public void calculateView(Window window) {
-		viewX = (window.getWidth() / (scale * 2)) + 4;
-		viewY = (window.getHeight() / (scale * 2)) + 4;
+//		viewX = (window.getWidth() / (scale * 2)) + 4;
+//		viewY = (window.getHeight() / (scale * 2)) + 4;
 	}
 	
 	public Matrix4f getWorldMatrix() {
 		return world;
 	}
 	
-	public void render(TileRenderer render, Shader shader, Camera cam) {
-		int posX = (int) cam.getPosition().x / (scale * 2);
-		int posY = (int) cam.getPosition().y / (scale * 2);
-		
-		for (int i = 0; i < viewX; i++) {
-			for (int j = 0; j < viewY; j++) {
-				Tile t = getTile(i - posX - (viewX / 2) + 1, j + posY - (viewY / 2));
-				if (t != null) render.renderTile(t, i - posX - (viewX / 2) + 1, -j - posY + (viewY / 2), shader, world, cam);
+//	public void render(TileRenderer render, Shader shader, Camera cam) {
+//		int posX = (int) cam.getPosition().x / (scale * 2);
+//		int posY = (int) cam.getPosition().y / (scale * 2);
+//		
+//		for (int i = 0; i < viewX; i++) {
+//			for (int j = 0; j < viewY; j++) {
+//				Tile t = getTile(i - posX - (viewX / 2) + 1, j + posY - (viewY / 2));
+//				if (t != null) render.renderTile(t, i - posX - (viewX / 2) + 1, -j - posY + (viewY / 2), shader, world, cam);
+//			}
+//		}
+//		
+//		for (Entity entity : entities) {
+//			entity.render(shader, cam, this);
+//		}
+//	}
+	public void renderTiles(Sprite tileSprites, Camera camera) {
+		for (int j = 0; j < height; j++) {
+			for (int i = 0; i < width; i++) {
+				float x = i * scale;
+				float y = j * scale;
+				tileSprites.drawSprite(x, y, x + scale, y + scale, (int)tiles[i + (j*width)]);
 			}
 		}
-		
-		for (Entity entity : entities) {
-			entity.render(shader, cam, this);
+	}
+	
+	public void renderEntities(Sprite tileEntity, Camera camera) {
+		// Only rendering the first entity (which is the player in the test world) for the test
+		if (entities.size() > 0) {
+			Player player = (Player)entities.get(0);
+			Transform transform = player.getTransform();
+			float x = transform.pos.x * scale;
+			float y = transform.pos.y * scale;
+			float entityScaleX = transform.scale.x * scale;
+			float entityScaleY = transform.scale.y * scale;
+			tileEntity.drawSprite(x, y, x + entityScaleX, y + entityScaleY, 2);
 		}
 	}
 	
@@ -140,22 +166,25 @@ public class World {
 	}
 	
 	public void correctCamera(Camera camera, Window window) {
-		Vector3f pos = camera.getPosition();
-		
-		int w = -width * scale * 2;
-		int h = height * scale * 2;
-		
-		if (pos.x > -(window.getWidth() / 2) + scale) pos.x = -(window.getWidth() / 2) + scale;
-		if (pos.x < w + (window.getWidth() / 2) + scale) pos.x = w + (window.getWidth() / 2) + scale;
-		
-		if (pos.y < (window.getHeight() / 2) - scale) pos.y = (window.getHeight() / 2) - scale;
-		if (pos.y > h - (window.getHeight() / 2) - scale) pos.y = h - (window.getHeight() / 2) - scale;
+//		Vector3f pos = camera.getPosition();
+//		
+//		int w = -width * scale * 2;
+//		int h = height * scale * 2;
+//		
+//		if (pos.x > -(window.getWidth() / 2) + scale) pos.x = -(window.getWidth() / 2) + scale;
+//		if (pos.x < w + (window.getWidth() / 2) + scale) pos.x = w + (window.getWidth() / 2) + scale;
+//		
+//		if (pos.y < (window.getHeight() / 2) - scale) pos.y = (window.getHeight() / 2) - scale;
+//		if (pos.y > h - (window.getHeight() / 2) - scale) pos.y = h - (window.getHeight() / 2) - scale;
 	}
 	
 	public void setTile(Tile tile, int x, int y) {
 		tiles[x + y * width] = tile.getId();
 		if (tile.isSolid()) {
-			bounding_boxes[x + y * width] = new AABB(new Vector2f(x * 2, -y * 2), new Vector2f(1, 1));
+			//bounding_boxes[x + y * width] = new AABB(new Vector2f(x, y), new Vector2f(1, 1));
+			Vector2f posCoords = new Vector2f(x, y);
+			Vector2f sizeCoords = new Vector2f(1, 1).add(posCoords);
+			bounding_boxes[x + y * width] = AABB.createAABB(posCoords, sizeCoords);
 		}
 		else {
 			bounding_boxes[x + y * width] = null;

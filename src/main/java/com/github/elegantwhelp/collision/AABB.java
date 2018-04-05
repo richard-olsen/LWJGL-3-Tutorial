@@ -5,6 +5,17 @@ import org.joml.Vector2f;
 public class AABB {
 	private Vector2f center, half_extent;
 	
+	public static AABB createAABB(Vector2f minCoords, Vector2f maxCoords) {
+		Vector2f center = new Vector2f(minCoords);
+		Vector2f half_extents = new Vector2f(maxCoords);
+		center.add(maxCoords);
+		center.mul(0.5f);
+		
+		half_extents.sub(center);
+		
+		return new AABB(center, half_extents);
+	}
+	
 	public AABB(Vector2f center, Vector2f half_extent) {
 		this.center = center;
 		this.half_extent = half_extent;

@@ -14,7 +14,7 @@ public class Gui {
 	private Button temporary;
 	
 	public Gui(Window window) {
-		shader = new Shader("gui");
+		//shader = new Shader("gui");
 		camera = new Camera(window.getWidth(), window.getHeight());
 		sheet = new TileSheet("gui.png", 9);
 		temporary = new Button(new Vector2f(-32, -32), new Vector2f(96, 96));

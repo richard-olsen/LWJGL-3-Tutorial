@@ -65,6 +65,9 @@ public class Texture {
 		super.finalize();
 	}
 	
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
+	
 	public void bind(int sampler) {
 		if (sampler >= 0 && sampler <= 31) {
 			glActiveTexture(GL_TEXTURE0 + sampler);

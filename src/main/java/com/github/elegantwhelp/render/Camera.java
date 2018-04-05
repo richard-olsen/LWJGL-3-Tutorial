@@ -30,7 +30,7 @@ public class Camera {
 		return projection;
 	}
 	
-	public Matrix4f getProjection() {
-		return projection.translate(position, new Matrix4f());
+	public Matrix4f getTransformedProjection() {
+		return projection.translate(position.mul(-1, new Vector3f()), new Matrix4f());
 	}
 }

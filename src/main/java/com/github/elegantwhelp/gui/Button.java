@@ -43,7 +43,7 @@ public class Button {
 		
 		transform.identity().translate(position.x, position.y, 0).scale(scale.x, scale.y, 1); // Middle/Fill
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 4, 1);
@@ -55,7 +55,7 @@ public class Button {
 				sheet.bindTile(shader, 1, 1);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		renderSides(position, scale, camera, sheet, shader);
 		renderCorners(position, scale, camera, sheet, shader);
@@ -64,7 +64,7 @@ public class Button {
 	private void renderSides(Vector2f position, Vector2f scale, Camera camera, TileSheet sheet, Shader shader) {
 		transform.identity().translate(position.x, position.y + scale.y - 16, 0).scale(scale.x, 16, 1); // Top
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 4, 0);
@@ -76,11 +76,11 @@ public class Button {
 				sheet.bindTile(shader, 1, 0);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x, position.y - scale.y + 16, 0).scale(scale.x, 16, 1); // Bottom
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 4, 2);
@@ -92,11 +92,11 @@ public class Button {
 				sheet.bindTile(shader, 1, 2);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x - scale.x + 16, position.y, 0).scale(16, scale.y, 1); // Left
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 3, 1);
@@ -108,11 +108,11 @@ public class Button {
 				sheet.bindTile(shader, 0, 1);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x + scale.x - 16, position.y, 0).scale(16, scale.y, 1); // Right
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 5, 1);
@@ -124,14 +124,14 @@ public class Button {
 				sheet.bindTile(shader, 2, 1);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 	}
 	
 	private void renderCorners(Vector2f position, Vector2f scale, Camera camera, TileSheet sheet, Shader shader) {
 		transform.identity().translate(position.x - scale.x + 16, position.y + scale.y - 16, 0).scale(16, 16, 1); // Top
 																																					 // Left
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 3, 0);
@@ -143,12 +143,12 @@ public class Button {
 				sheet.bindTile(shader, 0, 0);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x + scale.x - 16, position.y + scale.y - 16, 0).scale(16, 16, 1); // Top
 																																					 // Right
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 5, 0);
@@ -160,12 +160,12 @@ public class Button {
 				sheet.bindTile(shader, 2, 0);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x - scale.x + 16, position.y - scale.y + 16, 0).scale(16, 16, 1); // Bottom
 																																					 // Left
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 3, 2);
@@ -177,12 +177,12 @@ public class Button {
 				sheet.bindTile(shader, 0, 2);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 		
 		transform.identity().translate(position.x + scale.x - 16, position.y - scale.y + 16, 0).scale(16, 16, 1); // Bottom
 																																					 // Right
 		
-		shader.setUniform("projection", camera.getProjection().mul(transform));
+		shader.setUniform("projection", camera.getTransformedProjection().mul(transform));
 		switch (selectedState) {
 			case STATE_SELECTED :
 				sheet.bindTile(shader, 5, 2);
@@ -194,6 +194,6 @@ public class Button {
 				sheet.bindTile(shader, 2, 2);
 				break;
 		}
-		Assets.getModel().render();
+//		Assets.getModel().render();
 	}
 }
