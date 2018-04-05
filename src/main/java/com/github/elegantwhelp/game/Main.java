@@ -11,6 +11,7 @@ import com.github.elegantwhelp.io.Timer;
 import com.github.elegantwhelp.io.Window;
 import com.github.elegantwhelp.render.Camera;
 import com.github.elegantwhelp.render.Shader;
+import com.github.elegantwhelp.render.Sprite;
 import com.github.elegantwhelp.render.VertexBatcher;
 import com.github.elegantwhelp.world.TileRenderer;
 import com.github.elegantwhelp.world.World;
@@ -64,9 +65,10 @@ public class Main {
 		Shader batcherShader = new Shader("batcher");
 		VertexBatcher batcher = new VertexBatcher();
 		batcher.init();
+		Sprite sprite = new Sprite(batcher, "tiles.png", 4, 4);
 		
-		World world = new World("test_level", camera);
-		world.calculateView(window);
+		//World world = new World("test_level", camera);
+		//world.calculateView(window);
 		
 		Gui gui = new Gui(window);
 		
@@ -79,6 +81,9 @@ public class Main {
 		double time = Timer.getTime();
 		double unprocessed = 0;
 		
+		float halfWinWidth = window.getWidth() * 0.5f;
+		float halfWinHeight = window.getHeight() * 0.5f;
+		
 		while (!window.shouldClose()) {
 			boolean can_render = false;
 			
@@ -89,13 +94,20 @@ public class Main {
 			
 			time = time_2;
 			
+			if (window.hasResized()) {
+				int winWidth = window.getWidth();
+				int winHeight = window.getHeight();
+				camera.setProjection(winWidth, winHeight);
+				
+				halfWinWidth = winWidth * 0.5f;
+				halfWinHeight = winHeight * 0.5f;
+				
+				gui.resizeCamera(window);
+				//world.calculateView(window);
+				glViewport(0, 0, winWidth, winHeight);
+			}
+			
 			while (unprocessed >= frame_cap) {
-				if (window.hasResized()) {
-					camera.setProjection(window.getWidth(), window.getHeight());
-					gui.resizeCamera(window);
-					world.calculateView(window);
-					glViewport(0, 0, window.getWidth(), window.getHeight());
-				}
 				
 				unprocessed -= frame_cap;
 				can_render = true;
@@ -106,9 +118,9 @@ public class Main {
 				
 				gui.update(window.getInput());
 				
-				world.update((float) frame_cap, window, camera);
+				//world.update((float) frame_cap, window, camera);
 				
-				world.correctCamera(camera, window);
+				//world.correctCamera(camera, window);
 				
 				window.update();
 				
@@ -135,8 +147,11 @@ public class Main {
 				
 				batcherShader.bind();
 				batcherShader.setUniform("cam_projection", camera.getUntransformedProjection());
-				batcher.addQuad(-32, -32, 32, 32);
-				batcher.addQuad(-100, -100, -50, -50);
+				batcherShader.setUniform("atlas", 0);
+				
+				sprite.bindTexture();
+				sprite.drawSprite(-halfWinWidth,-halfWinHeight,halfWinWidth,halfWinHeight,0);
+				
 				batcher.draw();
 				
 				window.swapBuffers();
