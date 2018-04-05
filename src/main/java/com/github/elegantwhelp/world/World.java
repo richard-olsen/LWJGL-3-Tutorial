@@ -77,7 +77,7 @@ public class World {
 							case 1 :							// Player
 								Player player = new Player(transform);
 								entities.add(player);
-								camera.getPosition().set(transform.pos.x, transform.pos.y, 0);
+								camera.getPosition().set((transform.pos.add(player.getBoundingBox().getHalfExtent(), new Vector2f())).mul(scale), 0);
 								break;
 							default :
 								break;

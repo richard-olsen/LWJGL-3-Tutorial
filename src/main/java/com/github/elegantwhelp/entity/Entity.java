@@ -29,6 +29,10 @@ public abstract class Entity {
 	
 	public Transform getTransform() { return transform; }
 	
+	public AABB getBoundingBox() {
+		return bounding_box;
+	}
+	
 	protected void setAnimation(int index, Animation animation) {
 		animations[index] = animation;
 	}
