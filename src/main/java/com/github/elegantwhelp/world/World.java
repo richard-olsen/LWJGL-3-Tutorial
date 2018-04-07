@@ -13,6 +13,7 @@ import org.joml.*;
 import com.github.elegantwhelp.collision.AABB;
 import com.github.elegantwhelp.entity.*;
 import com.github.elegantwhelp.io.Window;
+import com.github.elegantwhelp.render.Animation;
 import com.github.elegantwhelp.render.Camera;
 import com.github.elegantwhelp.render.Shader;
 import com.github.elegantwhelp.render.Sprite;
@@ -36,7 +37,7 @@ public class World {
 			
 			width = tile_sheet.getWidth();
 			height = tile_sheet.getHeight();
-			scale = 32;
+			scale = 64;
 			
 			this.world = new Matrix4f().setTranslation(new Vector3f(0));
 			this.world.scale(scale);
@@ -77,7 +78,7 @@ public class World {
 							case 1 :							// Player
 								Player player = new Player(transform);
 								entities.add(player);
-								camera.getPosition().set((transform.pos.add(player.getBoundingBox().getHalfExtent(), new Vector2f())).mul(scale), 0);
+								transform.pos.add(player.getBoundingBox().getHalfExtent(), camera.getPosition()).mul(scale);
 								break;
 							default :
 								break;
@@ -95,7 +96,7 @@ public class World {
 	public World() {
 		width = 64;
 		height = 64;
-		scale = 32;
+		scale = 64;
 		
 		tiles = new byte[width * height];
 		bounding_boxes = new AABB[width * height];
@@ -113,41 +114,26 @@ public class World {
 		return world;
 	}
 	
-//	public void render(TileRenderer render, Shader shader, Camera cam) {
-//		int posX = (int) cam.getPosition().x / (scale * 2);
-//		int posY = (int) cam.getPosition().y / (scale * 2);
-//		
-//		for (int i = 0; i < viewX; i++) {
-//			for (int j = 0; j < viewY; j++) {
-//				Tile t = getTile(i - posX - (viewX / 2) + 1, j + posY - (viewY / 2));
-//				if (t != null) render.renderTile(t, i - posX - (viewX / 2) + 1, -j - posY + (viewY / 2), shader, world, cam);
-//			}
-//		}
-//		
-//		for (Entity entity : entities) {
-//			entity.render(shader, cam, this);
-//		}
-//	}
 	public void renderTiles(Sprite tileSprites, Camera camera) {
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {
 				float x = i * scale;
 				float y = j * scale;
-				tileSprites.drawSprite(x, y, x + scale, y + scale, (int)tiles[i + (j*width)]);
+				tileSprites.drawSprite(x, y, x + scale, y + scale, getTile(i, j).getTileIndex());
 			}
 		}
 	}
 	
 	public void renderEntities(Sprite tileEntity, Camera camera) {
-		// Only rendering the first entity (which is the player in the test world) for the test
-		if (entities.size() > 0) {
-			Player player = (Player)entities.get(0);
-			Transform transform = player.getTransform();
+		for (Entity entity : entities) {
+			Transform transform = entity.getTransform();
 			float x = transform.pos.x * scale;
 			float y = transform.pos.y * scale;
 			float entityScaleX = transform.scale.x * scale;
 			float entityScaleY = transform.scale.y * scale;
-			tileEntity.drawSprite(x, y, x + entityScaleX, y + entityScaleY, 2);
+			
+			Animation animation = entity.getCurrentAnimation();
+			tileEntity.drawSprite(x, y, x + entityScaleX, y + entityScaleY, animation.getIndex());
 		}
 	}
 	
@@ -166,16 +152,20 @@ public class World {
 	}
 	
 	public void correctCamera(Camera camera, Window window) {
-//		Vector3f pos = camera.getPosition();
-//		
-//		int w = -width * scale * 2;
-//		int h = height * scale * 2;
-//		
-//		if (pos.x > -(window.getWidth() / 2) + scale) pos.x = -(window.getWidth() / 2) + scale;
-//		if (pos.x < w + (window.getWidth() / 2) + scale) pos.x = w + (window.getWidth() / 2) + scale;
-//		
-//		if (pos.y < (window.getHeight() / 2) - scale) pos.y = (window.getHeight() / 2) - scale;
-//		if (pos.y > h - (window.getHeight() / 2) - scale) pos.y = h - (window.getHeight() / 2) - scale;
+		float halfWinWidth = window.getWidth() * 0.5f;
+		float halfWinHeight = window.getHeight() * 0.5f;
+		
+		float minX = halfWinWidth;
+		float minY = halfWinHeight;
+		float maxX = width * scale - halfWinWidth;
+		float maxY = height * scale - halfWinHeight;
+		
+		Vector2f pos = camera.getPosition();
+		
+		if (pos.x > maxX) pos.x = maxX;
+		if (pos.y > maxY) pos.y = maxY;
+		if (pos.x < minX) pos.x = minX;
+		if (pos.y < minY) pos.y = minY;
 	}
 	
 	public void setTile(Tile tile, int x, int y) {

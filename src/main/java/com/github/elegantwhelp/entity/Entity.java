@@ -2,7 +2,6 @@ package com.github.elegantwhelp.entity;
 
 import org.joml.*;
 
-import com.github.elegantwhelp.assets.Assets;
 import com.github.elegantwhelp.collision.AABB;
 import com.github.elegantwhelp.collision.Collision;
 import com.github.elegantwhelp.io.Window;
@@ -39,6 +38,10 @@ public abstract class Entity {
 	
 	public void useAnimation(int index) {
 		this.use_animation = index;
+	}
+	
+	public Animation getCurrentAnimation() {
+		return animations[use_animation];
 	}
 	
 	public void move(Vector2f direction) {
@@ -99,17 +102,8 @@ public abstract class Entity {
 		}
 	}
 	
-	public abstract void update(float delta, Window window, Camera camera, World world);
-	
-	public void render(Shader shader, Camera camera, World world) {
-		Matrix4f target = camera.getTransformedProjection();
-		target.mul(world.getWorldMatrix());
-		
-		shader.bind();
-		shader.setUniform("sampler", 0);
-		shader.setUniform("projection", transform.getProjection(target));
-		animations[use_animation].bind(0);
-		//Assets.getModel().render();
+	public void update(float delta, Window window, Camera camera, World world) {
+		animations[use_animation].animate();
 	}
 	
 	public void collideWithEntity(Entity entity) {

@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.opengl.GL;
 
-import com.github.elegantwhelp.assets.Assets;
 import com.github.elegantwhelp.gui.Gui;
 import com.github.elegantwhelp.io.Timer;
 import com.github.elegantwhelp.io.Window;
@@ -13,7 +12,6 @@ import com.github.elegantwhelp.render.Camera;
 import com.github.elegantwhelp.render.Shader;
 import com.github.elegantwhelp.render.Sprite;
 import com.github.elegantwhelp.render.VertexBatcher;
-import com.github.elegantwhelp.world.TileRenderer;
 import com.github.elegantwhelp.world.World;
 
 public class Main {
@@ -36,36 +34,13 @@ public class Main {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		Camera camera = new Camera(window.getWidth(), window.getHeight());
-		glEnable(GL_TEXTURE_2D);
 		
-		//TileRenderer tiles = new TileRenderer();
-		//Assets.initAsset();
-		
-		// float[] vertices = new float[] {
-		// -1f, 1f, 0, //TOP LEFT 0
-		// 1f, 1f, 0, //TOP RIGHT 1
-		// 1f, -1f, 0, //BOTTOM RIGHT 2
-		// -1f, -1f, 0,//BOTTOM LEFT 3
-		// };
-		//
-		// float[] texture = new float[] {
-		// 0,0,
-		// 1,0,
-		// 1,1,
-		// 0,1,
-		// };
-		//
-		// int[] indices = new int[] {
-		// 0,1,2,
-		// 2,3,0
-		// };
-		//
-		// Model model = new Model(vertices, texture, indices);
 		Shader batcherShader = new Shader();
 		batcherShader.create("batcher");
 		VertexBatcher batcher = new VertexBatcher();
 		batcher.init();
 		Sprite tiles = new Sprite(batcher, "tiles_with_borders.png", 4, 4);
+		Sprite entities = new Sprite(batcher, "entities.png", 16, 16);
 		
 		World world = new World("test_level", camera);
 		//world.calculateView(window);
@@ -113,7 +88,7 @@ public class Main {
 				
 				world.update((float) frame_cap, window, camera);
 				
-				//world.correctCamera(camera, window);
+				world.correctCamera(camera, window);
 				
 				window.update();
 				
@@ -143,10 +118,11 @@ public class Main {
 				batcherShader.setUniform("atlas", 0);
 				
 				tiles.bindTexture();
-				
 				world.renderTiles(tiles, camera);
-				world.renderEntities(tiles, camera);
+				batcher.draw();
 				
+				entities.bindTexture();
+				world.renderEntities(entities, camera);
 				batcher.draw();
 				
 				window.swapBuffers();
